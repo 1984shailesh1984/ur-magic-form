@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Submission Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <form id="dataForm">
+        <h2>Submit Your Data</h2>
+
+        <label for="roti">How many rotis did you eat?</label>
+        <input type="number" id="roti" name="roti" required>
+
+        <label for="meditation">Did you meditate?</label>
+        <select id="meditation" name="meditation" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="nameJap">Did you chant any names?</label>
+        <input type="text" id="nameJap" name="nameJap">
+
+        <label for="doodh">Did you drink milk?</label>
+        <select id="doodh" name="doodh" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="pareshani">Any problems today?</label>
+        <input type="text" id="pareshani" name="pareshani">
+
+        <label for="tabiyat">How are you feeling?</label>
+        <input type="text" id="tabiyat" name="tabiyat">
+
+        <label for="tension">Any tension?</label>
+        <input type="text" id="tension" name="tension">
+
+        <label for="family">Are your family members fine?</label>
+        <select id="family" name="family" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="khush">Are you happy?</label>
+        <select id="khush" name="khush" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="extraInfo">Any additional information?</label>
+        <textarea id="extraInfo" name="extraInfo"></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            var formData = new FormData(this);
+            var data = {
+                date: new Date().toLocaleDateString(),
+                roti: formData.get('roti'),
+                meditation: formData.get('meditation'),
+                nameJap: formData.get('nameJap'),
+                doodh: formData.get('doodh'),
+                pareshani: formData.get('pareshani'),
+                tabiyat: formData.get('tabiyat'),
+                tension: formData.get('tension'),
+                family: formData.get('family'),
+                khush: formData.get('khush'),
+                extraInfo: formData.get('extraInfo')
+            };
+
+            fetch('https://script.google.com/macros/s/AKfycbxEp8gFwyoPLApeYHg8Bv8flc9vYtLIPdkQBEUbnlApqWooxEvzBzzUjQ6qVLM0VDAW/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Data saved successfully:', result);
+                alert('Your data has been saved successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting data. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
