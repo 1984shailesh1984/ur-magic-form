@@ -9,55 +9,126 @@
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"></script>
 
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5c6bc0;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        label {
+            font-size: 16px;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #5c6bc0;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #3f51b5;
+        }
+
+        .thankyou-message {
+            display: none;
+            font-size: 18px;
+            color: #4caf50;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Submit Your Data</h1>
 
-    <form id="dataForm">
-        <label for="roti">How many rotis did you eat?</label>
-        <input type="number" id="roti" name="roti" required>
+    <div>
+        <h1>Submit Your Data</h1>
 
-        <label for="meditation">Did you meditate?</label>
-        <select id="meditation" name="meditation" required>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-        </select>
+        <form id="dataForm">
+            <label for="roti">How many rotis did you eat?</label>
+            <input type="number" id="roti" name="roti" required>
 
-        <label for="nameJap">Did you chant any names?</label>
-        <input type="text" id="nameJap" name="nameJap">
+            <label for="meditation">Did you meditate?</label>
+            <select id="meditation" name="meditation" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
 
-        <label for="doodh">Did you drink milk?</label>
-        <select id="doodh" name="doodh" required>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-        </select>
+            <label for="nameJap">Did you chant any names?</label>
+            <input type="text" id="nameJap" name="nameJap">
 
-        <label for="pareshani">Any problems today?</label>
-        <input type="text" id="pareshani" name="pareshani">
+            <label for="doodh">Did you drink milk?</label>
+            <select id="doodh" name="doodh" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
 
-        <label for="tabiyat">How are you feeling?</label>
-        <input type="text" id="tabiyat" name="tabiyat">
+            <label for="pareshani">Any problems today?</label>
+            <input type="text" id="pareshani" name="pareshani">
 
-        <label for="tension">Any tension?</label>
-        <input type="text" id="tension" name="tension">
+            <label for="tabiyat">How are you feeling?</label>
+            <input type="text" id="tabiyat" name="tabiyat">
 
-        <label for="family">Are your family members fine?</label>
-        <select id="family" name="family" required>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-        </select>
+            <label for="tension">Any tension?</label>
+            <input type="text" id="tension" name="tension">
 
-        <label for="khush">Are you happy?</label>
-        <select id="khush" name="khush" required>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-        </select>
+            <label for="family">Are your family members fine?</label>
+            <select id="family" name="family" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
 
-        <label for="extraInfo">Any additional information?</label>
-        <textarea id="extraInfo" name="extraInfo"></textarea>
+            <label for="khush">Are you happy?</label>
+            <select id="khush" name="khush" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
 
-        <button type="submit">Submit</button>
-    </form>
+            <label for="extraInfo">Any additional information?</label>
+            <textarea id="extraInfo" name="extraInfo"></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="thankyou-message" id="thankyouMessage">
+            <p>Thank you for your submission!</p>
+        </div>
+    </div>
 
     <script>
         // Firebase configuration
@@ -99,7 +170,8 @@
             newDataRef.set(formData)
                 .then(() => {
                     console.log('Data saved to Firebase');
-                    alert('Your data has been saved successfully!');
+                    document.getElementById('thankyouMessage').style.display = 'block';  // Show thank you message
+                    document.getElementById('dataForm').reset();  // Reset the form
                 })
                 .catch((error) => {
                     console.error('Error saving data: ', error);
@@ -107,5 +179,6 @@
                 });
         });
     </script>
+
 </body>
 </html>
