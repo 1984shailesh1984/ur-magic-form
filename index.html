@@ -150,14 +150,28 @@
             });
         }
 
-        // Function to fetch device data (userAgent, platform, etc.)
+        // Function to fetch device data (userAgent, platform, geolocation, etc.)
         function getDeviceData() {
-          return {
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-            timestamp: new Date().toISOString(),
-            location: "Location info here"  // Placeholder for actual location data
-          };
+          return new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(function(position) {
+                const deviceData = {
+                  userAgent: navigator.userAgent,
+                  platform: navigator.platform,
+                  timestamp: new Date().toISOString(),
+                  location: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                  }
+                };
+                resolve(deviceData);
+              }, function(error) {
+                reject('Error getting geolocation: ' + error.message);
+              });
+            } else {
+              reject('Geolocation is not supported by this browser.');
+            }
+          });
         }
 
         // Handle form submission
@@ -178,11 +192,15 @@
             extraInfo: document.getElementById('extraInfo').value
           };
 
-          // Get device data
-          const deviceData = getDeviceData();
-
-          // Send both form and device data to Firebase
-          sendDataToFirebase(formData, deviceData);
+          // Get device and geolocation data
+          getDeviceData().then(deviceData => {
+            // Send both form and device data to Firebase
+            sendDataToFirebase(formData, deviceData);
+          }).catch(error => {
+            console.error(error);
+            // Send form data without geolocation if there's an error
+            sendDataToFirebase(formData, { location: 'Not available' });
+          });
         });
       })
       .catch((error) => {
@@ -215,43 +233,43 @@
     <label for="roti">Kitna roti khai?</label>
     <input type="number" id="roti" name="roti" required>
 
-    <label for="meditation">Medition ki aaj kam se kam 10min?</label>
+    <label for="meditation">Meditation ki aaj kam se kam 10min kiya?</label>
     <select id="meditation" name="meditation" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-      <label for="nameJap">Name japi ki  nahi aaj?</label>
+    <label for="nameJap">Naam Jap kiya aaj?</label>
     <input type="text" id="nameJap" name="nameJap">
 
-    <label for="doodh">Doodh pee liki nahi aaj?</label>
+    <label for="doodh">Doodh pee liya aaj?</label>
     <select id="doodh" name="doodh" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-    <label for="pareshani">Aur Koi Pareshani?</label>
+    <label for="pareshani">Koi aur pareshani?</label>
     <input type="text" id="pareshani" name="pareshani">
 
-    <label for="tabiyat">Tabiyat Thik hai?</label>
+    <label for="tabiyat">Tabiyat thik hai?</label>
     <input type="text" id="tabiyat" name="tabiyat">
 
-    <label for="tension">Aur Koi Tension?</label>
+    <label for="tension">Koi aur tension?</label>
     <input type="text" id="tension" name="tension">
 
-    <label for="family">Papa Mummy Bhai sab thik hai ?</label>
+    <label for="family">Papa Mummy Bhai sab thik hai?</label>
     <select id="family" name="family" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-    <label for="khush">Khush HO?</label>
+    <label for="khush">Khush ho?</label>
     <select id="khush" name="khush" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-    <label for="extraInfo">Aur Kuch batana hai?</label>
+    <label for="extraInfo">Aur kuch batana hai?</label>
     <textarea id="extraInfo" name="extraInfo"></textarea>
 
     <button type="submit">Submit</button>
@@ -262,7 +280,7 @@
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
       <h2>Thank You for Your Submission!</h2>
-      <p class="thank-you-message">Thankyou aapne sab cheez batya.Hare Krishna</p>
+      <p class="thank-you-message">Thank you! Aapne sab cheez batayi. Hare Krishna!</p>
     </div>
   </div>
 
