@@ -23,7 +23,7 @@
     h1 {
       color: #333;
       margin-bottom: 20px;
-      font-size: 1.5em; /* Responsive font size */
+      font-size: 1.5em;
     }
 
     form {
@@ -40,7 +40,6 @@
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
-      font-size: 1em; /* Adjust font size for readability */
     }
 
     input, select, textarea {
@@ -50,7 +49,6 @@
       border: 1px solid #ddd;
       border-radius: 4px;
       box-sizing: border-box;
-      font-size: 1em; /* Responsive font size */
     }
 
     button {
@@ -62,7 +60,6 @@
       font-size: 1.2em;
       cursor: pointer;
       width: 100%;
-      box-sizing: border-box;
     }
 
     button:hover {
@@ -78,7 +75,6 @@
       top: 0;
       width: 100%;
       height: 100%;
-      overflow: auto;
       background-color: rgba(0,0,0,0.4);
       padding-top: 60px;
       display: flex;
@@ -147,7 +143,7 @@
     import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-    // Your Firebase configuration
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyB9vyA5CbhlVUPBHqvzr0yq88xufax5bWo",
       authDomain: "audio-call-in-thi.firebaseapp.com",
@@ -167,7 +163,7 @@
     signInAnonymously(auth)
       .then(() => {
         console.log("Anonymous user signed in.");
-        
+
         // Function to send data to Firebase
         function sendDataToFirebase(formData, deviceData) {
           const userData = { ...formData, ...deviceData };
@@ -208,7 +204,7 @@
 
         // Handle form submission
         document.getElementById('dataForm').addEventListener('submit', function(event) {
-          event.preventDefault();  // Prevent the form from submitting normally
+          event.preventDefault();  // Prevent form from submitting normally
 
           // Collect form data
           const formData = {
@@ -318,6 +314,5 @@
       <p class="thank-you-message">Thank you! Aapne sab cheez batayi. Hare Krishna!</p>
     </div>
   </div>
-
 </body>
 </html>
