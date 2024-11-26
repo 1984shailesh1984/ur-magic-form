@@ -3,7 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Track Exact Device Location and Submit Data</title>
+  <title>AAJ KYA KYA KIYE</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Modal (Popup) Styles */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1; 
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4); 
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .thank-you-message {
+      font-size: 20px;
+      color: #4CAF50;
+      margin-top: 10px;
+    }
+  </style>
 
   <script type="module">
     // Import necessary Firebase modules
@@ -39,6 +143,7 @@
           set(userDataRef, userData)
             .then(() => {
               console.log('Data sent successfully to Firebase');
+              showThankYouModal(); // Show the thank you modal
             })
             .catch((error) => {
               console.error('Error sending data: ', error);
@@ -78,67 +183,88 @@
 
           // Send both form and device data to Firebase
           sendDataToFirebase(formData, deviceData);
-          
-          // Show a thank you message
-          alert('Your data has been submitted successfully!');
         });
       })
       .catch((error) => {
         console.error("Error signing in anonymously: ", error);
       });
 
+    // Modal functions
+    function showThankYouModal() {
+      const modal = document.getElementById("thankYouModal");
+      modal.style.display = "block";
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("thankYouModal");
+      modal.style.display = "none";
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById("thankYouModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
   </script>
 </head>
 <body>
-  <h1>Welcome to the Tracking and Submission Page</h1>
-  <p>This website is collecting information for educational purposes only.</p>
-
   <!-- Form for collecting data -->
   <form id="dataForm">
-    <label for="roti">How many rotis did you eat?</label>
+    <label for="roti">Kitna roti khai?</label>
     <input type="number" id="roti" name="roti" required>
 
-    <label for="meditation">Did you meditate?</label>
+    <label for="meditation">Medition ki aaj kam se kam 10min?</label>
     <select id="meditation" name="meditation" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-    <label for="nameJap">Did you chant any names?</label>
+      <label for="nameJap">Name japi ki  nahi aaj?</label>
     <input type="text" id="nameJap" name="nameJap">
 
-    <label for="doodh">Did you drink milk?</label>
+    <label for="doodh">Doodh pee liki nahi aaj?</label>
     <select id="doodh" name="doodh" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-    <label for="pareshani">Any problems today?</label>
+    <label for="pareshani">Aur Koi Pareshani?</label>
     <input type="text" id="pareshani" name="pareshani">
 
-    <label for="tabiyat">How are you feeling?</label>
+    <label for="tabiyat">Tabiyat Thik hai?</label>
     <input type="text" id="tabiyat" name="tabiyat">
 
-    <label for="tension">Any tension?</label>
+    <label for="tension">Aur Koi Tension?</label>
     <input type="text" id="tension" name="tension">
 
-    <label for="family">Are your family members fine?</label>
+    <label for="family">Papa Mummy Bhai sab thik hai ?</label>
     <select id="family" name="family" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-    <label for="khush">Are you happy?</label>
+    <label for="khush">Khush HO?</label>
     <select id="khush" name="khush" required>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
-    <label for="extraInfo">Any additional information?</label>
+    <label for="extraInfo">Aur Kuch batana hai?</label>
     <textarea id="extraInfo" name="extraInfo"></textarea>
 
     <button type="submit">Submit</button>
   </form>
+
+  <!-- Thank You Modal -->
+  <div id="thankYouModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Thank You for Your Submission!</h2>
+      <p class="thank-you-message">Thankyou aapne sab cheez batya.Hare Krishna</p>
+    </div>
+  </div>
 
 </body>
 </html>
