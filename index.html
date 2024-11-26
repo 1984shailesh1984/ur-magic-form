@@ -11,14 +11,12 @@
       background-color: #e9f1f5;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       height: 100vh;
       margin: 0;
       flex-direction: column;
       text-align: center;
-      padding: 20px;
-      box-sizing: border-box;
-      overflow: auto;
+      scroll-behavior: smooth; /* Smooth scrolling */
     }
 
     h1 {
@@ -32,10 +30,9 @@
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      width: 100%;
+      width: 90%;
       max-width: 450px;
-      z-index: 2;
-      margin-top: 30px;
+      z-index: 2; /* Ensure form is above modal initially */
     }
 
     label {
@@ -70,6 +67,8 @@
       cursor: pointer;
       width: 100%;
       transition: background-color 0.3s;
+      position: relative;
+      z-index: 3; /* Make sure button is clickable */
     }
 
     button:hover {
@@ -79,7 +78,7 @@
     .modal {
       display: none;
       position: fixed;
-      z-index: 999;
+      z-index: 999; /* Ensure modal is on top of everything */
       left: 0;
       top: 0;
       width: 100%;
@@ -100,7 +99,7 @@
       text-align: center;
       position: relative;
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(-50%); /* Center modal vertically */
     }
 
     .close {
@@ -125,7 +124,7 @@
 
     @media (max-width: 600px) {
       h1 {
-        font-size: 2em;
+        font-size: 28px;
       }
 
       form {
@@ -143,10 +142,6 @@
       .modal-content {
         width: 90%;
         padding: 20px;
-      }
-
-      body {
-        padding-top: 10px;
       }
     }
   </style>
@@ -170,12 +165,14 @@
     const database = getDatabase(app);
     const auth = getAuth(app);
 
+    // Function to show the thank you modal
     function showThankYouModal() {
       const modal = document.getElementById("thankYouModal");
       modal.style.display = "block";
       document.body.style.overflow = 'hidden'; // Prevent background scrolling when modal is shown
     }
 
+    // Function to close the modal
     function closeModal() {
       const modal = document.getElementById("thankYouModal");
       modal.style.display = "none";
@@ -185,7 +182,7 @@
     signInAnonymously(auth)
       .then(() => {
         console.log("Anonymous user signed in.");
-
+        
         function sendDataToFirebase(formData, deviceData) {
           const userData = { ...formData, ...deviceData };
           const userDataRef = ref(database, 'userData/' + auth.currentUser.uid);
@@ -247,12 +244,25 @@
         console.error("Error signing in anonymously: ", error);
       });
 
+    // Function to convert Firebase UTC timestamp to IST
+    function convertToIST(utcTimestamp) {
+      const date = new Date(utcTimestamp);
+      return date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    }
+
+    // Example usage: Convert a timestamp and log it
+    const exampleTimestamp = "2024-11-26T20:30:47.203Z"; // Replace with Firebase timestamp
+    const istTime = convertToIST(exampleTimestamp);
+    console.log("Converted IST Time: ", istTime);
+
+    // Event listener for modal close (X)
     window.addEventListener('DOMContentLoaded', () => {
       const closeButton = document.querySelector('.close');
       if (closeButton) {
         closeButton.onclick = closeModal;
       }
 
+      // Close modal when clicked outside
       window.onclick = function(event) {
         const modal = document.getElementById("thankYouModal");
         if (event.target == modal) {
@@ -264,44 +274,42 @@
 </head>
 <body>
 
-  <h1>AAJ KYA KYA KIYE</h1>
-
   <form id="dataForm">
     <label for="roti">Kitna roti khai?</label>
     <input type="text" id="roti" name="roti" required>
 
-    <label for="meditation">Meditation aaj kam se kam 10min kiya?</label>
-    <select id="meditation" name="meditation" required>
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
+    <label for="meditation">Kya aaj meditation kiya?</label>
+    <select id="meditation" name="meditation">
+      <option value="yes">Haan</option>
+      <option value="no">Nahi</option>
     </select>
 
-    <label for="doodh">Doodh pee liya aaj?</label>
-    <select id="doodh" name="doodh" required>
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
+    <label for="doodh">Kitna doodh pia?</label>
+    <input type="text" id="doodh" name="doodh" required>
+
+    <label for="pareshani">Aaj pareshani thi?</label>
+    <select id="pareshani" name="pareshani">
+      <option value="yes">Haan</option>
+      <option value="no">Nahi</option>
     </select>
 
-    <label for="pareshani">Aaj koi pareshani koi Tension?</label>
-    <textarea id="pareshani" name="pareshani" required></textarea>
+    <label for="tabiyat">Tabiyat kaise hai?</label>
+    <input type="text" id="tabiyat" name="tabiyat">
 
-    <label for="tabiyat">Aapki tabiyat kaisi hai?</label>
-    <input type="text" id="tabiyat" name="tabiyat" required>
+    <label for="family">Family ke saath kaisa tha?</label>
+    <textarea id="family" name="family"></textarea>
 
-    <label for="family">Papa Mummy Bhai Sab Thik Hai?</label>
-    <textarea id="family" name="family" required></textarea>
-
-    <label for="extraInfo">Khush ho aap? Aur Kuch Batana hai?</label>
+    <label for="extraInfo">Kuch aur batayein:</label>
     <textarea id="extraInfo" name="extraInfo"></textarea>
 
     <button type="submit">Submit</button>
   </form>
 
+  <!-- Modal -->
   <div id="thankYouModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <h3>Thank You Batane ke Liye</h3>
-      <p class="thank-you-message">Mala ya Naam Japte Raho, Hare Krishna</p>
+      <div class="thank-you-message">Thank you! Your response has been submitted successfully!</div>
     </div>
   </div>
 
