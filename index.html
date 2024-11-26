@@ -165,6 +165,20 @@
     const database = getDatabase(app);
     const auth = getAuth(app);
 
+    // Function to show the thank you modal
+    function showThankYouModal() {
+      const modal = document.getElementById("thankYouModal");
+      modal.style.display = "block";
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling when modal is shown
+    }
+
+    // Function to close the modal
+    function closeModal() {
+      const modal = document.getElementById("thankYouModal");
+      modal.style.display = "none";
+      document.body.style.overflow = 'auto'; // Allow background scrolling again
+    }
+
     signInAnonymously(auth)
       .then(() => {
         console.log("Anonymous user signed in.");
@@ -211,7 +225,6 @@
           const formData = {
             roti: document.getElementById('roti').value,
             meditation: document.getElementById('meditation').value,
-            nameJap: document.getElementById('nameJap').value,
             doodh: document.getElementById('doodh').value,
             pareshani: document.getElementById('pareshani').value,
             tabiyat: document.getElementById('tabiyat').value,
@@ -231,40 +244,31 @@
         console.error("Error signing in anonymously: ", error);
       });
 
-    function showThankYouModal() {
-      const modal = document.getElementById("thankYouModal");
-      modal.style.display = "block";
-      document.body.style.overflow = 'hidden'; // Prevent background scrolling when modal is shown
-    }
-
-    function closeModal() {
-      const modal = document.getElementById("thankYouModal");
-      modal.style.display = "none";
-      document.body.style.overflow = 'auto'; // Allow background scrolling again
-    }
-
-    window.onclick = function(event) {
-      const modal = document.getElementById("thankYouModal");
-      if (event.target == modal) {
-        closeModal();
+    // Event listener for modal close (X)
+    window.addEventListener('DOMContentLoaded', () => {
+      const closeButton = document.querySelector('.close');
+      if (closeButton) {
+        closeButton.onclick = closeModal;
       }
-    }
+
+      // Close modal when clicked outside
+      window.onclick = function(event) {
+        const modal = document.getElementById("thankYouModal");
+        if (event.target == modal) {
+          closeModal();
+        }
+      }
+    });
   </script>
 </head>
 <body>
 
   <form id="dataForm">
     <label for="roti">Kitna roti khai?</label>
-    <input type="number" id="roti" name="roti" required>
+    <input type="text" id="roti" name="roti" required>
 
     <label for="meditation">Meditation aaj kam se kam 10min kiya?</label>
     <select id="meditation" name="meditation" required>
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
-    </select>
-
-    <label for="nameJap">Naam ya Mala Jap kiya aaj?</label>
-    <select id="nameJap" id="nameJap" name="nameJap">
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
@@ -292,9 +296,9 @@
 
   <div id="thankYouModal" class="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h3>Thank You for Submitting!</h3>
-      <p class="thank-you-message">ThankYou Aaapne Sab Bataya,Hare Krishna</p>
+      <span class="close">&times;</span>
+      <h3>Thank You Batane ke Liye</h3>
+      <p class="thank-you-message">Mala ya Naam Japte Raho,Hare Krishna</p>
     </div>
   </div>
 
