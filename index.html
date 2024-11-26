@@ -3,53 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Submission Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        form {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            text-align: center;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            padding: 12px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        h2 {
-            color: #333;
-        }
-    </style>
+    <title>Submit Your Data</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"></script>
+
 </head>
 <body>
-    <form id="dataForm">
-        <h2>Submit Your Data</h2>
+    <h1>Submit Your Data</h1>
 
+    <form id="dataForm">
         <label for="roti">How many rotis did you eat?</label>
         <input type="number" id="roti" name="roti" required>
 
@@ -96,41 +60,51 @@
     </form>
 
     <script>
-        document.getElementById('dataForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9vyA5CbhlVUPBHqvzr0yq88xufax5bWo",
+            authDomain: "audio-call-in-thi.firebaseapp.com",
+            databaseURL: "https://audio-call-in-thi-default-rtdb.firebaseio.com",
+            projectId: "audio-call-in-thi",
+            storageBucket: "audio-call-in-thi.firebasestorage.app",
+            messagingSenderId: "154034686991",
+            appId: "1:154034686991:web:80aab62e22d92d7814a77a",
+        };
 
-            var formData = new FormData(this);
-            var data = {
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database(app);
+
+        // Handle form submission
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+
+            // Collect form data
+            const formData = {
                 date: new Date().toLocaleDateString(),
-                roti: formData.get('roti'),
-                meditation: formData.get('meditation'),
-                nameJap: formData.get('nameJap'),
-                doodh: formData.get('doodh'),
-                pareshani: formData.get('pareshani'),
-                tabiyat: formData.get('tabiyat'),
-                tension: formData.get('tension'),
-                family: formData.get('family'),
-                khush: formData.get('khush'),
-                extraInfo: formData.get('extraInfo')
+                roti: document.getElementById('roti').value,
+                meditation: document.getElementById('meditation').value,
+                nameJap: document.getElementById('nameJap').value,
+                doodh: document.getElementById('doodh').value,
+                pareshani: document.getElementById('pareshani').value,
+                tabiyat: document.getElementById('tabiyat').value,
+                tension: document.getElementById('tension').value,
+                family: document.getElementById('family').value,
+                khush: document.getElementById('khush').value,
+                extraInfo: document.getElementById('extraInfo').value
             };
 
-            // Send the form data to the Google Apps Script Web App URL
-            fetch('https://script.google.com/macros/s/AKfycbxEp8gFwyoPLApeYHg8Bv8flc9vYtLIPdkQBEUbnlApqWooxEvzBzzUjQ6qVLM0VDAW/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Data saved successfully:', result);
-                alert('Your data has been saved successfully!');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error submitting data. Please try again.');
-            });
+            // Save data to Firebase Realtime Database
+            const newDataRef = database.ref('formData').push();  // Create a new unique record
+            newDataRef.set(formData)
+                .then(() => {
+                    console.log('Data saved to Firebase');
+                    alert('Your data has been saved successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error saving data: ', error);
+                    alert('Error submitting data. Please try again.');
+                });
         });
     </script>
 </body>
