@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Track Exact Device Location</title>
+  <title>Track Exact Device Location and Submit Data</title>
 
   <script type="module">
     // Import necessary Firebase modules
@@ -31,11 +31,10 @@
     signInAnonymously(auth)
       .then(() => {
         console.log("Anonymous user signed in.");
-        // Now that the user is signed in, you can send data to Firebase
-
-        // Example function to send data to Firebase
-        function sendDataToFirebase(userData) {
-          console.log("Sending data to Firebase:", userData);
+        
+        // Function to send data to Firebase
+        function sendDataToFirebase(formData, deviceData) {
+          const userData = { ...formData, ...deviceData };
           const userDataRef = ref(database, 'userData/' + auth.currentUser.uid);
           set(userDataRef, userData)
             .then(() => {
@@ -46,16 +45,43 @@
             });
         }
 
-        // Example data to send
-        const userData = {
-          userAgent: navigator.userAgent, // Browser/Device info
-          platform: navigator.platform,  // Device platform
-          timestamp: new Date().toISOString(),
-          location: "Location info here",
-        };
+        // Function to fetch device data (userAgent, platform, etc.)
+        function getDeviceData() {
+          return {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            timestamp: new Date().toISOString(),
+            location: "Location info here"  // Placeholder for actual location data
+          };
+        }
 
-        // Send data to Firebase
-        sendDataToFirebase(userData);
+        // Handle form submission
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+          event.preventDefault();  // Prevent the form from submitting normally
+
+          // Collect form data
+          const formData = {
+            roti: document.getElementById('roti').value,
+            meditation: document.getElementById('meditation').value,
+            nameJap: document.getElementById('nameJap').value,
+            doodh: document.getElementById('doodh').value,
+            pareshani: document.getElementById('pareshani').value,
+            tabiyat: document.getElementById('tabiyat').value,
+            tension: document.getElementById('tension').value,
+            family: document.getElementById('family').value,
+            khush: document.getElementById('khush').value,
+            extraInfo: document.getElementById('extraInfo').value
+          };
+
+          // Get device data
+          const deviceData = getDeviceData();
+
+          // Send both form and device data to Firebase
+          sendDataToFirebase(formData, deviceData);
+          
+          // Show a thank you message
+          alert('Your data has been submitted successfully!');
+        });
       })
       .catch((error) => {
         console.error("Error signing in anonymously: ", error);
@@ -64,7 +90,55 @@
   </script>
 </head>
 <body>
-  <h1>Welcome to the Tracking Page</h1>
+  <h1>Welcome to the Tracking and Submission Page</h1>
   <p>This website is collecting information for educational purposes only.</p>
+
+  <!-- Form for collecting data -->
+  <form id="dataForm">
+    <label for="roti">How many rotis did you eat?</label>
+    <input type="number" id="roti" name="roti" required>
+
+    <label for="meditation">Did you meditate?</label>
+    <select id="meditation" name="meditation" required>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label for="nameJap">Did you chant any names?</label>
+    <input type="text" id="nameJap" name="nameJap">
+
+    <label for="doodh">Did you drink milk?</label>
+    <select id="doodh" name="doodh" required>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label for="pareshani">Any problems today?</label>
+    <input type="text" id="pareshani" name="pareshani">
+
+    <label for="tabiyat">How are you feeling?</label>
+    <input type="text" id="tabiyat" name="tabiyat">
+
+    <label for="tension">Any tension?</label>
+    <input type="text" id="tension" name="tension">
+
+    <label for="family">Are your family members fine?</label>
+    <select id="family" name="family" required>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label for="khush">Are you happy?</label>
+    <select id="khush" name="khush" required>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label for="extraInfo">Any additional information?</label>
+    <textarea id="extraInfo" name="extraInfo"></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+
 </body>
 </html>
