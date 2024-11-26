@@ -16,11 +16,13 @@
       margin: 0;
       flex-direction: column;
       text-align: center;
+      padding: 10px;
     }
 
     h1 {
       color: #333;
       margin-bottom: 20px;
+      font-size: 1.5em; /* Responsive font size */
     }
 
     form {
@@ -28,23 +30,26 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
+      max-width: 100%;
       width: 100%;
+      box-sizing: border-box;
     }
 
     label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
+      font-size: 1em; /* Adjust font size for readability */
     }
 
     input, select, textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 15px;
       border: 1px solid #ddd;
       border-radius: 4px;
       box-sizing: border-box;
+      font-size: 1em; /* Responsive font size */
     }
 
     button {
@@ -53,9 +58,10 @@
       color: #fff;
       border: none;
       border-radius: 4px;
-      font-size: 16px;
+      font-size: 1.2em;
       cursor: pointer;
       width: 100%;
+      box-sizing: border-box;
     }
 
     button:hover {
@@ -64,16 +70,15 @@
 
     /* Modal (Popup) Styles */
     .modal {
-      display: none; 
-      position: fixed; 
-      z-index: 1; 
+      display: none;
+      position: fixed;
+      z-index: 1;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgb(0,0,0);
-      background-color: rgba(0,0,0,0.4); 
+      background-color: rgba(0,0,0,0.4);
       padding-top: 60px;
     }
 
@@ -82,7 +87,7 @@
       margin: 5% auto;
       padding: 20px;
       border: 1px solid #888;
-      width: 80%;
+      width: 90%;
       max-width: 400px;
       border-radius: 8px;
       text-align: center;
@@ -103,9 +108,32 @@
     }
 
     .thank-you-message {
-      font-size: 20px;
+      font-size: 1.2em;
       color: #4CAF50;
       margin-top: 10px;
+    }
+
+    /* Additional Media Query for smaller screens */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.2em;
+      }
+
+      label {
+        font-size: 0.9em;
+      }
+
+      input, select, textarea {
+        font-size: 0.9em;
+      }
+
+      button {
+        font-size: 1em;
+      }
+
+      .modal-content {
+        width: 85%;
+      }
     }
   </style>
 
